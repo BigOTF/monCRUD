@@ -1,10 +1,10 @@
 import React from 'react'
 import HomeForm from './HomeForm'
 
-const Forms = () => {
+const Forms = ({ title, setTitle, content, setContent, handleSubmit }) => {
   return (
     <section className='px-6 py-5'>
-        <HomeForm />
+        <HomeForm title={title} setTitle={setTitle} content={content} setContent={setContent} handleSubmit={handleSubmit}/>
     </section>
   )
 }
