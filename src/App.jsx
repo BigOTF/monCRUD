@@ -14,7 +14,6 @@ function App() {
       try {
         const response = await fetch('http://localhost:3000');
         const data = await response.json();
-        console.log(data.todo);
         return setPost(data.todo)
       } catch(err) {
         console.log(err);
@@ -33,7 +32,12 @@ function App() {
         },
         body: JSON.stringify({title, content: [{value: content}]})
       });
-      return response.json();
+      const newPost = await response.json();
+      setPost((prevPosts) => [...prevPosts, newPost]);
+
+      setTitle('');
+      setContent('');
+
     } catch(err) {
       console.log(err);
     }
@@ -44,10 +48,14 @@ function App() {
       const response = fetch(`http://localhost:3000/delete/${id}`, {
         method: 'DELETE'
       })
-      if(response.ok) {
-        return setPost((prev) => prev.filter(post => post._id === id));
+
+      if (response.ok) {
+        return setPost((prev) => {
+          return prev.filter((post) => post._id !== id);
+        })
+       
       } else {
-        console.log('error');
+        console.error('Failed to delete the post');
       }
      
     } catch(err) {
@@ -56,7 +64,7 @@ function App() {
   }
 
   return (
-    <div>
+    <div className='pb-[600px]'>
       <Header />
       <Forms title={title} setTitle={setTitle} content={content} setContent={setContent} handleSubmit={handleSubmit}/>
       <PostForm post={post} deletPost={deletPost}/>
